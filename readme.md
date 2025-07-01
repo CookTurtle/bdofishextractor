@@ -26,8 +26,8 @@
 1. 訪問資料作者頁面[Flockenberger/bdo-fish-waypoints](https://github.com/Flockenberger/bdo-fish-waypoints)
 2. 點選旁邊的`Releases`
 3. 下載`BDO-Fishing-Waypoints.zip`
-4. 將壓縮檔解壓縮，並且將`BDO-Fishing-Waypoints`資料夾重新命名成`data`
-5. 將`data`資料夾放置在與fishgui.exe同一個目錄下
+4. 將壓縮檔解壓縮，並且將`BDO-Fishing-Waypoints`資料夾重新命名成`data`，並且刪除`_Waypoints.xml`檔案(也可以不刪除但就是注意不要選到而已)
+5. 將`data`資料夾放置在與fishgui.exe同一個目錄
 
 # ❓ 如何取得角色ID
 1. 訪問電腦的`文件`資料夾，如果你不知道你的文件資料夾在哪的話，在你的檔案管理員的路徑列輸入`%USERPROFILE%\Documents`
