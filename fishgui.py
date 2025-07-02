@@ -124,7 +124,7 @@ class SeaSelectorApp:
         self.all_sea_names = get_sea_names()
 
         master.title("海域選擇器")
-        master.geometry("450x300")
+        master.geometry("450x250")
         master.resizable(False, False)
         
         # 設定視窗圖示
@@ -167,15 +167,20 @@ class SeaSelectorApp:
         data_path_text = f"資料集位置：{DATA_DIR}"
         self.data_path_label = tk.Label(master, text=data_path_text, fg="gray", font=("Arial", 8), wraplength=400)
         self.data_path_label.pack(pady=(0, 5))
-
+    
     def set_window_icon(self, master):
         """設定視窗圖示"""
+        def resource_path(relative_path):
+            """獲取資源的實際路徑（支援 PyInstaller 打包）"""
+            if hasattr(sys, '_MEIPASS'):
+                return os.path.join(sys._MEIPASS, relative_path)
+            return os.path.join(EXE_DIR, relative_path)
         # 尋找圖示檔案（支援多種格式）
         icon_files = ['icon.ico', 'app.ico', 'sea.ico', 'icon.png', 'app.png', 'sea.png']
         icon_path = None
             
         for icon_file in icon_files:
-            potential_path = os.path.join(EXE_DIR, icon_file)
+            potential_path = resource_path(icon_file)
             if os.path.exists(potential_path):
                 icon_path = potential_path
                 break
@@ -301,7 +306,8 @@ class SeaSelectorApp:
                 new_content = re.sub(pattern_simple, bookmark_block, gamevar_content, flags=re.DOTALL | re.IGNORECASE)
 
             # 備份原始檔
-            backup_path = target_path + ".bak"
+            # 備份原始檔到 EXE 所在資料夾
+            backup_path = os.path.join(EXE_DIR, "gamevariable.xml.bak")
             shutil.copy(target_path, backup_path)
 
             # 寫入新內容，使用原始檔案的編碼
