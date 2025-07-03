@@ -46,29 +46,24 @@ def detect_file_encoding(file_path):
 
 def read_file_with_encoding(file_path):
     """使用適當編碼讀取檔案"""
-    encodings_to_try = ['utf-8', 'utf-8-sig', 'gbk', 'big5', 'cp1252', 'iso-8859-1']
+    encodings_to_try = ['utf-8', 'utf-8-sig', 'gbk', 'big5', 'cp950', 'cp1252', 'iso-8859-1']
     
-    # 先嘗試自動檢測編碼
     detected_encoding = detect_file_encoding(file_path)
-    if detected_encoding and detected_encoding not in encodings_to_try:
+    if detected_encoding and detected_encoding.lower() not in encodings_to_try:
         encodings_to_try.insert(0, detected_encoding)
-    
+
     for encoding in encodings_to_try:
         try:
-            with open(file_path, "r", encoding=encoding, errors='ignore') as f:
+            with open(file_path, "r", encoding=encoding) as f:
                 content = f.read()
-                # 檢查內容是否合理（包含預期的XML標籤）
                 if '<WorldmapBookMark>' in content or '<?xml' in content:
                     return content, encoding
         except (UnicodeDecodeError, UnicodeError):
             continue
-    
-    # 如果所有編碼都失敗，使用 utf-8 並忽略錯誤
-    try:
-        with open(file_path, "r", encoding="utf-8", errors='replace') as f:
-            return f.read(), 'utf-8'
-    except Exception as e:
-        raise Exception(f"無法讀取檔案 {file_path}: {str(e)}")
+
+    # 如果所有都失敗，最後嘗試用 utf-8 並替換錯誤字元
+    with open(file_path, "r", encoding="utf-8", errors='replace') as f:
+        return f.read(), 'utf-8'
 
 def extract_worldmap_bookmark(content):
     """提取 WorldmapBookMark 區段，使用更精確的正則表達式"""
@@ -311,8 +306,8 @@ class SeaSelectorApp:
             shutil.copy(target_path, backup_path)
 
             # 寫入新內容，使用原始檔案的編碼
-            with open(target_path, "w", encoding=gamevar_encoding, errors='replace') as f:
-                f.write(new_content)
+            with open(target_path, "w", encoding=gamevar_encoding) as f:
+               f.write(new_content)
 
             self.status_label.config(text="操作成功完成！", fg="green")
             messagebox.showinfo("成功", f"已將 {selected} 的海域資料插入 gamevariable.xml\n\n原檔已備份為：{os.path.basename(backup_path)}")
